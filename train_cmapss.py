@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
 from Informer import informer
+from RevIN.RevIN import RevIN
 from functional import dwt, DWT1D
 from model import *
 import torch
@@ -108,9 +109,19 @@ def train():
             # s_input, s_lb, s_msk = s_input, s_lb, s_msk
             # t_input, t_msk = t_input, t_msk
 
+            # reverse_layer
+            revein_layer = RevIN(24)
+            re_s_in = revein_layer(s_input,'norm')
+            re_t_in = revein_layer(t_input,'norm')
+
+
+
             # output1, rul, x
-            s_features, s_out,s_conv_fea = net(s_input, s_msk)
-            t_features, t_out,t_conv_fea = net(t_input, t_msk) # [bts, seq_len, feature_num]
+            # s_features, s_out,s_conv_fea = net(s_input, s_msk)
+            # t_features, t_out,t_conv_fea = net(t_input, t_msk) # [bts, seq_len, feature_num]
+            s_features, s_out,s_conv_fea = net(re_s_in, s_msk)
+            t_features, t_out,t_conv_fea = net(re_t_in, t_msk) # [bts, seq_len, feature_num]
+
 
             # 频域特征提取
             coefs = dwt(s_input, "haar")
