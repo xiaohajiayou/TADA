@@ -172,6 +172,6 @@ if __name__ == "__main__":
     print('=' * 89)
     print(df.to_string())
     dir = '/home/user/Desktop/TADA/result'
-    df.to_csv(f'{dir}/第三章+频域特征.csv')
+    df.to_csv(f'{dir}/第三章+频域特征+相互注意力(不cat)+1000epoch.csv')
 
 

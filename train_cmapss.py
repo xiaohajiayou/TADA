@@ -78,7 +78,8 @@ def validate():
             score = tot_score * Rc / len(valid_list)
     return rmse,score
 
-en = 240
+# en = 240
+en = 1000
 def train():
     minn = 999
     writer_dir = (
@@ -125,7 +126,7 @@ def train():
             pin_fea = pin_fea.reshape(pin_fea.shape[0],pin_fea.shape[2],-1)
             s_features_ad = s_features.reshape(s_features.shape[0],s_features.shape[2],s_features.shape[1])
             # 128*24*146
-            s_p_t_feature = torch.concat([pin_fea,s_features_ad],dim=-1)
+            # s_p_t_feature = torch.concat([pin_fea,s_features_ad],dim=-1)
 
 
             pin_fea = dwt_layer(t_input,lohi.cuda())
@@ -156,8 +157,13 @@ def train():
                 # s_domain_bkb = D2(s_conv_fea)
                 # t_domain_bkb = D2(t_conv_fea)
                 # 用transformer+pin
-                s_domain_bkb = D2(s_p_t_feature)
-                t_domain_bkb = D2(t_p_t_feature)
+                # s_domain_bkb = D2(s_p_t_feature)
+                # t_domain_bkb = D2(t_p_t_feature)
+
+                s_domain_bkb = D2(pin_fea,s_features_ad)
+                t_domain_bkb = D2(pin_fea,s_features_ad)
+                if s_domain_bkb ==None:
+                    continue
                 # D1为rul级别的鉴别器
                 s_domain_out = D1(s_out)
                 t_domain_out = D1(t_out)
